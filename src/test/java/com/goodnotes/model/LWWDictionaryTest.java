@@ -28,5 +28,14 @@ public class LWWDictionaryTest {
         Assertions.assertEquals(dictionary.lookup(1), 20);
     }
 
+    @Test
+    public void shouldRemoveElementFromDictionary(){
+        dictionary.add(1, 20, LocalDateTime.now());
+        dictionary.add(2, 30, LocalDateTime.now());
+
+        dictionary.remove(2);
+
+        Assertions.assertNull(dictionary.lookup(2));
+    }
 
 }

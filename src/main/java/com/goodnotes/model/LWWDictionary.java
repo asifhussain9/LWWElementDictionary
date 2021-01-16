@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class LWWDictionary<K, V> {
 
-    Map<K, TimestampedValue> addMap;
-    Map<K, LocalDateTime> removeMap;
+    private Map<K, TimestampedValue> addMap;
+    private Map<K, LocalDateTime> removeMap;
 
     public LWWDictionary() {
         addMap = new HashMap<>();
@@ -24,6 +24,14 @@ public class LWWDictionary<K, V> {
 
     public void add(K key, V value, LocalDateTime timestamp) {
         addMap.put(key, new TimestampedValue(value, timestamp));
+    }
+
+    public void remove(K key) {
+        remove(key, LocalDateTime.now());
+    }
+
+    public void remove(K key, LocalDateTime timestamp) {
+        removeMap.put(key, timestamp);
     }
 
     public int size() {
