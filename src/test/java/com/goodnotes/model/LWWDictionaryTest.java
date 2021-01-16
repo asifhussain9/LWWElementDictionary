@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 public class LWWDictionaryTest {
@@ -22,10 +23,25 @@ public class LWWDictionaryTest {
     }
 
     @Test
+    public void shouldAddNullElementToDictionary() {
+        dictionary.add(null, 5, LocalDateTime.now());
+
+        Assertions.assertEquals(1, dictionary.size());
+        Assertions.assertEquals(5, dictionary.lookup(null));
+    }
+
+    @Test
     public void shouldLookupKeyAndReturnValue(){
         dictionary.add(1, 20, LocalDateTime.now());
 
         Assertions.assertEquals(dictionary.lookup(1), 20);
+    }
+
+    @Test
+    public void shouldLookupAndReturnNullForInvalidKey(){
+        dictionary.add(1, 20, LocalDateTime.now());
+
+        Assertions.assertEquals(dictionary.lookup(2), null);
     }
 
     @Test
@@ -36,6 +52,16 @@ public class LWWDictionaryTest {
         dictionary.remove(2);
 
         Assertions.assertNull(dictionary.lookup(2));
+    }
+
+    @Test
+    public void shouldNotRemoveIfElementRemovedBeforeAdd(){
+        dictionary.remove(2, LocalDateTime.now().minusMinutes(1));
+
+        dictionary.add(1, 20);
+        dictionary.add(2, 30, LocalDateTime.now());
+
+        Assertions.assertNotNull(dictionary.lookup(2));
     }
 
     @Test
