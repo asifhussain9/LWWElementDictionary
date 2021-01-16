@@ -65,6 +65,17 @@ public class LWWDictionaryTest {
     }
 
     @Test
+    public void shouldPreferRemoveIfRemoveAndAddTimestampsAreSame(){
+        LocalDateTime timestamp = LocalDateTime.now();
+        dictionary.remove(2, timestamp);
+
+        dictionary.add(1, 20);
+        dictionary.add(2, 30, timestamp);
+
+        Assertions.assertNull(dictionary.lookup(2));
+    }
+
+    @Test
     public void shouldMergeAddMapAndRemoveMap(){
         dictionary.add(1, 20);
         dictionary.add(2, 30, LocalDateTime.now());
