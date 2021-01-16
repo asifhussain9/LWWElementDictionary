@@ -51,4 +51,14 @@ public class LWWDictionaryTest {
         Assertions.assertEquals(dictionary.lookup(3), 30);
     }
 
+    @Test
+    public void shouldUpdateKeyValue(){
+        dictionary.add(1, 20);
+        dictionary.add(2, 30, LocalDateTime.now());
+
+        dictionary.update(1, 3);
+
+        Assertions.assertNull(dictionary.lookup(1));
+        Assertions.assertEquals(dictionary.lookup(3), 20);
+    }
 }

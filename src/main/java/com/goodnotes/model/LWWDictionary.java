@@ -27,6 +27,16 @@ public class LWWDictionary<K, V> {
         addMap.put(key, new TimestampedValue(value, timestamp));
     }
 
+    public void update(K oldKey, K newKey) {
+        TimestampedValue remove = containsKey(oldKey) ? addMap.remove(oldKey) : null;
+        add(newKey, remove == null ? null : (V)remove.value, LocalDateTime.now());
+    }
+
+    public void update(K oldKey, K newKey, LocalDateTime timestamp) {
+        TimestampedValue remove = containsKey(oldKey) ? addMap.remove(oldKey) : null;
+        add(newKey, remove == null ? null : (V)remove.value, timestamp);
+    }
+
     public void remove(K key) {
         remove(key, LocalDateTime.now());
     }
