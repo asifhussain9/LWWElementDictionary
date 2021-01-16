@@ -3,6 +3,7 @@ package com.goodnotes.model;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class LWWDictionary<K, V> {
 
@@ -40,6 +41,10 @@ public class LWWDictionary<K, V> {
 
     public V lookup(K key){
         return containsKey(key) ? (V) addMap.get(key).value : null;
+    }
+
+    public Map<K, TimestampedValue> merge() {
+        return addMap.entrySet().stream().filter(entry -> !removeMap.containsKey(entry.getKey()) || removeMap.get(entry.getKey()).isBefore(entry.getValue().timestamp)).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
     }
 
     class TimestampedValue<V> {

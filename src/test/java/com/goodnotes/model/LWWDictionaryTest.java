@@ -30,12 +30,25 @@ public class LWWDictionaryTest {
 
     @Test
     public void shouldRemoveElementFromDictionary(){
-        dictionary.add(1, 20, LocalDateTime.now());
+        dictionary.add(1, 20);
         dictionary.add(2, 30, LocalDateTime.now());
 
         dictionary.remove(2);
 
         Assertions.assertNull(dictionary.lookup(2));
+    }
+
+    @Test
+    public void shouldMergeAddMapAndRemoveMap(){
+        dictionary.add(1, 20);
+        dictionary.add(2, 30, LocalDateTime.now());
+        dictionary.add(3, 30, LocalDateTime.now());
+
+        dictionary.remove(2, LocalDateTime.now());
+        dictionary.remove(1);
+
+        Assertions.assertEquals(dictionary.size(), 1);
+        Assertions.assertEquals(dictionary.lookup(3), 30);
     }
 
 }
