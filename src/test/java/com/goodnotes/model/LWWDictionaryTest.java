@@ -97,4 +97,12 @@ public class LWWDictionaryTest {
         Assertions.assertNull(dictionary.lookup(1));
         Assertions.assertEquals(dictionary.lookup(3), 20);
     }
+
+    @Test
+    public void shouldAddLatestKeyValue(){
+        dictionary.add(1, 30, LocalDateTime.now());
+        dictionary.add(1, 20, LocalDateTime.now().minusMinutes(1));
+
+        Assertions.assertEquals(30, dictionary.lookup(1));
+    }
 }

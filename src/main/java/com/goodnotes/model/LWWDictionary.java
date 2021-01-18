@@ -46,7 +46,10 @@ public class LWWDictionary<K, V> {
      * Adds a key, value entry to dictionary with provided timestamp.
      */
     public void add(K key, V value, LocalDateTime timestamp) {
-        addMap.put(key, new TimestampedValue(value, timestamp));
+        boolean isLatestAddOperation = addMap.get(key) == null ? true : addMap.get(key).timestamp.isBefore(timestamp) ? true : false;
+
+        if(isLatestAddOperation)
+            addMap.put(key, new TimestampedValue(value, timestamp));
     }
 
     /**
