@@ -64,8 +64,14 @@ public class LWWDictionary<K, V> {
      * Updates key value. If old key is not present in the dictionary, adds null value.
      */
     public void update(K oldKey, K newKey, LocalDateTime timestamp) {
-        TimestampedValue remove = addMap.remove(oldKey);
-        add(newKey, remove == null ? null : (V)remove.value, timestamp);
+        boolean isLatestUpdateOperation = containsKey(oldKey) && addMap.get(oldKey).timestamp.isBefore(timestamp);
+
+        if(isLatestUpdateOperation){
+            TimestampedValue remove = addMap.remove(oldKey);
+            add(newKey, remove == null ? null : (V)remove.value, timestamp);
+        }
+
+
     }
 
     /**
@@ -79,7 +85,9 @@ public class LWWDictionary<K, V> {
      * Removes an entry from dictionary.
      */
     public void remove(K key, LocalDateTime timestamp) {
-        removeMap.put(key, timestamp);
+        boolean isLatestRemoveOperation = removeMap.get(key) == null || removeMap.get(key).isBefore(timestamp);
+        if(isLatestRemoveOperation)
+            removeMap.put(key, timestamp);
     }
 
     /**

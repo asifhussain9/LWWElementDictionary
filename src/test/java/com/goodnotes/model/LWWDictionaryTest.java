@@ -105,4 +105,20 @@ public class LWWDictionaryTest {
 
         Assertions.assertEquals(30, dictionary.lookup(1));
     }
+
+    @Test
+    public void shouldNotRemoveIfRemoveOperationOlderThanAdd(){
+        dictionary.add(1, 20, LocalDateTime.now());
+        dictionary.remove(1, LocalDateTime.now().minusMinutes(1));
+
+        Assertions.assertEquals(20, dictionary.lookup(1));
+    }
+
+    @Test
+    public void shouldNotUpdateIfUpdateOperationIsOld(){
+        dictionary.add(1, 20);
+        dictionary.update(1, 2, LocalDateTime.now().minusSeconds(1));
+
+        Assertions.assertEquals(20, dictionary.lookup(1));
+    }
 }
